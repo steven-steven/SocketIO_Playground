@@ -4,6 +4,8 @@ const hbs = require('hbs');  //templating engine handlebar
 const bodyParser = require('body-parser');
 const {ObjectId} = require('mongodb');
 const _ = require('lodash');
+const http = require("http");
+const socketIO = require("socket.io");
 
 require('./config/config');
 const {mongoose} = require('./db/mongoose');
@@ -13,19 +15,52 @@ const fileSystem = require(path.join(__dirname,'../public/js/fileSystem.js'));  
 const publicPath = path.join(__dirname,'../public');
 const viewsPath = path.join(__dirname,'../views');
 
+//Util Functions (socketio)
+const {generateMessage} = require('./utils/message');
+
+
 const port = process.env.PORT;      //port: heroku or local express app
+
 
 //--- SETUP  APP ---
 var app = express();
+var server = http.createServer(app);    //use http server not express server
 app.use( express.static( publicPath ) );    //static directory
 app.use( bodyParser.json() );     //parse client's json before giving to request
 app.set( 'view engine', 'hbs');              //setup Handlebar: view template engine and partials
 hbs.registerPartials( viewsPath + '/partials' );
 hbs.registerPartials( viewsPath + '/pageContent' )
-app.listen( port, ()=>{console.log(`Server up on port ${port}`)});  //port
+server.listen( port, ()=>{console.log(`Server up on port ${port}`)});  //port
 
 //--- SETUP DB --
 
+//-- Socket.io ---
+var io = socketIO(server); //web socket
+//new connection event
+io.on('connection', (socket)=>{     //receives socket from client side
+    console.log("New User COnnected!");
+
+    socket.on("disconnect", ()=>{
+        console.log("User disconnected");
+    })
+
+    socket.on("createMessage", (msg, callback)=>{
+        console.log("create message", msg);
+        io.emit('newMessage',  //broadcast
+            generateMessage( msg.from, msg.text)
+        );
+    }) //listen to client
+
+    //welcome other sockets when connected
+    socket.broadcast.emit('newMessage', 
+        generateMessage('Admin', "New User Joined")
+    )
+
+    //welcome message by admin
+    socket.emit("newMessage", 
+        generateMessage('Admin', "Welcome to the chat!")
+    );
+})
 
 //--- Request Handler ---
 app.get('/', (req, res)=>{
