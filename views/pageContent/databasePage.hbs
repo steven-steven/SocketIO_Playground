@@ -1,0 +1,60 @@
+<div class="container">
+    <h2>Editable Datatable</h2> 
+    <h3>GET Data</h3>
+
+    <script>
+        //get data from GET /todos AJAX?
+        //use that data to render obj
+        //use angular to bind obj to table
+        //var todoObj = /todos
+    </script>
+    <div class="table-responsive">     
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th>Todo Text</th>
+                <th>Completed</th>
+                <th>Completed At</th>
+            </tr>
+            </thead>
+            <tbody> <!-- binds the data -->
+            
+            <tr>
+                <td>John</td>
+                <td>Doe</td>
+                <td>john@example.com</td>
+            </tr>
+            <tr>
+                <td>Mary</td>
+                <td>Moe</td>
+                <td>mary@example.com</td>
+            </tr>
+            <tr>
+                <td>July</td>
+                <td>Dooley</td>
+                <td>july@example.com</td>
+            </tr>
+            </tbody>
+        </table>
+    </div> 
+
+    <h3>POST Data</h3>
+    <form action="/todos" method="POST">  <!--post-->
+        <label>text: </label>
+            <input type="text" name="text">
+            </br>
+        <label>Completed: </label>
+            <input type="checkbox" unselected name="completed">
+            </br>
+        <button type="submit">POST</button>
+    </form>
+    <!-- <fieldset data-bind="with: selectedRecord">
+        <legend>Edit Record</legend>
+        <p><label>Prefix: <input type="text" data-bind="value: Prefix"></label></p>
+        <p><label>Abbreviation: <input type="text" data-bind="value: Abbreviation"></label></p>
+        <p><label>Memory: <input type="text" data-bind="value: Memory"></label></p>
+        <p><label>Bandwidth: <input type="text" data-bind="value: Bandwidth"></label></p>
+        <p><label>Storage: <input type="text" data-bind="value: Storage"></label></p>
+        <p><label>Speed: <input type="text" data-bind="value: Speed"></label></p>
+    </fieldset> -->
+</div>
